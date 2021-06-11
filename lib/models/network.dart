@@ -1,18 +1,18 @@
-class Response{
+class Response<T>{
   int _statusCode;
-
+  T _data;
   int get statusCode => _statusCode;
 
-  Response(this._statusCode);
+  T get data => _data;
+
+  Response(this._statusCode, this._data);
 }
 
 class Success<T> extends Response {
-  T data;
-
-  Success(this.data,int statusCode): super(statusCode);
+  Success(int statusCode, T data,): super(statusCode, data);
 }
 
-class Error extends Response {
+class Error<T> extends Response {
 
-  Error(int statusCode): super(statusCode);
+  Error(int statusCode, T data): super(statusCode, data);
 }

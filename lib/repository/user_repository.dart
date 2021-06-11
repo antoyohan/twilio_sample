@@ -19,21 +19,21 @@ class UserRepoImpl implements UserRepo {
   @override
   Future<String> getId() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    var id = prefs.getString(Strings.id_preference) ?? 0;
+    var id = prefs.getString(Strings.id_preference);
     return Future.value(id);
   }
 
   @override
   Future<String> getName() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    var name = prefs.getString(Strings.name_preference) ?? 0;
+    var name = prefs.getString(Strings.name_preference);
     return Future.value(name);
   }
 
   @override
   Future<String> getToken() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    var token = prefs.getString(Strings.token_preference) ?? 0;
+    var token = prefs.getString(Strings.token_preference);
     return Future.value(token);
   }
 
