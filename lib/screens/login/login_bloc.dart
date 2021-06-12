@@ -20,7 +20,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     if (event is LoginSubmitted) {
       yield Loading();
       initialiseLogin(event);
-    } else if (event is LoginSuccess) {
+    } else if (event is LoginComplete) {
       yield LoginSuccess();
     }
   }

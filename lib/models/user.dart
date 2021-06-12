@@ -1,4 +1,4 @@
-//todo Storing for POC as Singleton
+
 class User {
   final String _id;
   final String _token;

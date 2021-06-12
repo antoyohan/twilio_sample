@@ -1,13 +1,17 @@
+import 'dart:developer' as developer;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:twilio_sample/repository/authentication_repository.dart';
 import 'package:twilio_sample/repository/services/network_service.dart';
 import 'package:twilio_sample/repository/user_repository.dart';
+import 'package:twilio_sample/screens/channel_list/channel_list_page.dart';
 import 'package:twilio_sample/screens/login/login_bloc.dart';
 import 'package:twilio_sample/screens/login/login_event.dart';
 import 'package:twilio_sample/screens/login/login_state.dart';
-import 'dart:developer' as developer;
+
 const String TAG = "loginPage";
+
 class LoginPage extends StatefulWidget {
   LoginPage({Key key}) : super(key: key);
 
@@ -88,17 +92,31 @@ class _LoginPageState extends State<LoginPage> {
                   bloc: _loginbloc,
                   listener: (context, state) {
                     if (state is LoginSuccess) {
-                      developer.log("login success" ,name: TAG);
+                      developer.log("login success", name: TAG);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => ChannelListPage()),
+                      );
                     }
                   },
-                  builder: (context, event) {
-                    return MaterialButton(
-                      child: Text("Login"),
-                      color: Color(0xFF5BA2DF),
-                      onPressed: () {
-                        _loginbloc.add(LoginSubmitted(textController.text));
-                      },
-                    );
+                  builder: (context, state) {
+                    if (state is Loading) {
+                      return Center(
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(10.0, 20.0, 10.0, 20.0),
+                          child: CircularProgressIndicator(),
+                        ),
+                      );
+                    } else {
+                      return MaterialButton(
+                        child: Text("Login"),
+                        color: Color(0xFF5BA2DF),
+                        onPressed: () {
+                          _loginbloc.add(LoginSubmitted(textController.text));
+                        },
+                      );
+                    }
                   }),
             ],
           ),
