@@ -1,5 +1,5 @@
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:twilio_sample/utils/Strings.dart';
+import 'package:twilio_sample/utils/string_contants.dart';
 
 abstract class UserRepo {
   Future<String> getName();

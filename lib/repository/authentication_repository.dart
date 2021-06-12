@@ -38,13 +38,17 @@ class AuthenticationRepoImpl implements AuthenticationRepo {
         await _networkService.getToken(TokenRequest(name: name, password: ""));
 
     if (response.statusCode == 201) {
-      TokenResponse tokenResponse = response.data as TokenResponse;
-      _userRepo.setName(tokenResponse.name);
-      _userRepo.setToken(tokenResponse.token);
-      _userRepo.setId(tokenResponse.identity);
+      await saveUserInfo(response);
       _controller.add(AuthenticationStatus.authenticated);
     } else {
       _controller.add(AuthenticationStatus.unauthenticated);
     }
+  }
+
+  Future<void> saveUserInfo(Response response) async{
+    TokenResponse tokenResponse = response.data as TokenResponse;
+    await _userRepo.setName(tokenResponse.name);
+    await _userRepo.setToken(tokenResponse.token);
+    await _userRepo.setId(tokenResponse.identity);
   }
 }

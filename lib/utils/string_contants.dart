@@ -3,4 +3,6 @@ class Strings {
   static const String token_preference = "token";
   static const String name_preference = "name";
   static const String id_preference = "id";
+
+  static String MESSAGE_TITLE = " Messages";
 }
