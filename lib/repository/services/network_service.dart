@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:twilio_sample/models/network.dart';
 import 'package:twilio_sample/models/token_request.dart';
 import 'package:twilio_sample/models/token_response.dart';
-import 'package:twilio_sample/utils/Strings.dart';
+import 'package:twilio_sample/utils/string_contants.dart';
 
 import 'network_interface.dart';
 
@@ -24,7 +24,7 @@ class NetworkServiceImpl extends NetworkService {
       return Error(response.statusCode, "Failed");
     }*/
     //todo Remove this Bypass
-    TokenResponse response = TokenResponse(request.name, "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImN0eSI6InR3aWxpby1mcGE7dj0xIn0.eyJqdGkiOiJTSzBlNjNmOGE3NTU3YzQxMmJiODQ1NTIzMGMwMzY0ZDM5LTE2MjM0MjMwNjQiLCJncmFudHMiOnsiaWRlbnRpdHkiOiJBbnRvIiwiY2hhdCI6eyJzZXJ2aWNlX3NpZCI6IklTYTUyYmZjNDk5Y2Q2NDJmMGFlODk0YTUzN2U0OWI3NjgifX0sImlhdCI6MTYyMzQyMzA2NCwiZXhwIjoxNjIzNDI2NjY0LCJpc3MiOiJTSzBlNjNmOGE3NTU3YzQxMmJiODQ1NTIzMGMwMzY0ZDM5Iiwic3ViIjoiQUMzMzkzY2YwMzgzZTE0N2E1MzM4NmUyOGM1MGJhYjU1NCJ9.BWizUyoNXmVK5qsBd9CG8yDE8mIxpIf_dXAZORWdVeE", "Test");
+    TokenResponse response = TokenResponse(request.name, "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImN0eSI6InR3aWxpby1mcGE7dj0xIn0.eyJqdGkiOiJTSzBlNjNmOGE3NTU3YzQxMmJiODQ1NTIzMGMwMzY0ZDM5LTE2MjM1NDE4MjYiLCJncmFudHMiOnsiaWRlbnRpdHkiOiJTYW1wbGUiLCJjaGF0Ijp7InNlcnZpY2Vfc2lkIjoiSVNhNTJiZmM0OTljZDY0MmYwYWU4OTRhNTM3ZTQ5Yjc2OCJ9fSwiaWF0IjoxNjIzNTQxODI2LCJleHAiOjE2MjM1NDU0MjYsImlzcyI6IlNLMGU2M2Y4YTc1NTdjNDEyYmI4NDU1MjMwYzAzNjRkMzkiLCJzdWIiOiJBQzMzOTNjZjAzODNlMTQ3YTUzMzg2ZTI4YzUwYmFiNTU0In0.JDDHcqiddTIo_vNY4xiyhzfsaC6Lu4HodX3nkYgc370", "Test");
     return Future.value(Success<TokenResponse>(201, response));
   }
 }

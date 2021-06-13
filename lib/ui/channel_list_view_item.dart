@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:twilio_programmable_chat/twilio_programmable_chat.dart';
+import 'package:twilio_sample/screens/channel_list/channel_list_bloc.dart';
+import 'dart:developer' as developer;
 
+const String TAG = "channelListViewItem";
 class ChannelListViewWidget extends StatefulWidget {
   ChannelListViewWidget({Key key, @required this.channelDescriptor})
       : super(key: key);
@@ -12,63 +16,79 @@ class ChannelListViewWidget extends StatefulWidget {
 
 class _ChannelListViewWidgetState extends State<ChannelListViewWidget> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
+  ChannelListBloc  _channelListBloc;
 
+  @overridex
+  void initState() {
+    _channelListBloc = BlocProvider.of<ChannelListBloc>(context);
+    developer.log("initState $_channelListBloc", name: TAG);
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
-    return Card(
-      clipBehavior: Clip.antiAliasWithSaveLayer,
-      color: Color(0xFFF5F5F5),
-      elevation: 5,
-      child: Row(
-        mainAxisSize: MainAxisSize.max,
-        children: [
-          Padding(
-            padding: EdgeInsets.fromLTRB(10, 5, 20, 5),
-            child: Container(
-              width: 60,
-              height: 60,
-              clipBehavior: Clip.antiAlias,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-              ),
-              child: Image.network(
-                'https://picsum.photos/seed/291/600',
-              ),
-            ),
-          ),
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                widget.channelDescriptor.friendlyName,
-                style: TextStyle(
-                  fontFamily: 'Roboto',
+    return GestureDetector(
+      onTap: () async  {
+        var channel = await widget.channelDescriptor.getChannel();
+        if (channel.status != ChannelStatus.JOINED) {
+          await _channelListBloc.joinChannel(channel);
+
+        }
+      },
+      child: Card(
+        clipBehavior: Clip.antiAliasWithSaveLayer,
+        color: Color(0xFFF5F5F5),
+        elevation: 5,
+        child: Row(
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            Padding(
+              padding: EdgeInsets.fromLTRB(10, 5, 20, 5),
+              child: Container(
+                width: 60,
+                height: 60,
+                clipBehavior: Clip.antiAlias,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                ),
+                child: Image.network(
+                  'https://picsum.photos/seed/291/600',
                 ),
               ),
-              Container(
-                constraints: BoxConstraints( maxWidth: 100),
-                child: Text(
-                  widget.channelDescriptor.sid,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
+            ),
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  widget.channelDescriptor.friendlyName,
+                  style: TextStyle(
+                    fontFamily: 'Roboto',
+                  ),
+                ),
+                Container(
+                  constraints: BoxConstraints( maxWidth: 100),
+                  child: Text(
+                    widget.channelDescriptor.sid,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontFamily: 'Roboto',
+                      color: Color(0xFF9F9F9F),
+                    ),
+                  ),
+                ),
+                Text(
+                  'Hello World',
                   style: TextStyle(
                     fontFamily: 'Roboto',
                     color: Color(0xFF9F9F9F),
                   ),
-                ),
-              ),
-              Text(
-                'Hello World',
-                style: TextStyle(
-                  fontFamily: 'Roboto',
-                  color: Color(0xFF9F9F9F),
-                ),
-              )
-            ],
-          )
-        ],
+                )
+              ],
+            )
+          ],
+        ),
       ),
     );
   }

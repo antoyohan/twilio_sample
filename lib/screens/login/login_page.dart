@@ -124,4 +124,10 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
+
+  @override
+  void dispose() {
+    _loginbloc.close();
+    super.dispose();
+  }
 }

@@ -69,6 +69,7 @@ class ChannelListBloc extends Bloc<ChannelEvent, ChannelListState> {
   }
 
   Future joinChannel(Channel channel) {
+    developer.log("joinChannel : ${channel.getFriendlyName()} ", name: TAG);
     if (channel != null) {
       add(ChannelJoinEvent());
       channel.onSynchronizationChanged.listen((event) {
