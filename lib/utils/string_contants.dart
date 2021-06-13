@@ -5,4 +5,6 @@ class Strings {
   static const String id_preference = "id";
 
   static String MESSAGE_TITLE = " Messages";
+
+  static String NO_MESSAGES_IN_THE_CHANNEL = " Oops ! No messages for you :(";
 }

@@ -11,12 +11,14 @@ import 'package:twilio_sample/screens/channel_list/channel_list_state.dart';
 const String TAG = "ChannelListBloc";
 
 class ChannelListBloc extends Bloc<ChannelEvent, ChannelListState> {
+  String identity;
+
   ChannelListBloc(ChannelListState initialState, this._userRepo)
       : super(initialState);
 
   ChatClient chatClient;
   UserRepoImpl _userRepo;
-  ChannelModel _currentChatModel;
+  ChannelModel _currentChannelModel;
   Map<String, int> unreadMessagesMap = {};
   Map<String, ChannelStatus> channelStatusMap = {};
   final List<StreamSubscription> _subscriptions = <StreamSubscription>[];
@@ -26,8 +28,8 @@ class ChannelListBloc extends Bloc<ChannelEvent, ChannelListState> {
     developer.log("state : $state", name: TAG);
     if (event is ChannelAddEvent) {
       yield ChannelLoading();
-    } else if (event is ChannelsLoaded) {
-      yield ChannelsModel(_currentChatModel);
+    } else if (event is ChannelsLoadedEvent) {
+      yield ChannelsModel(_currentChannelModel);
     }
   }
 
@@ -36,8 +38,9 @@ class ChannelListBloc extends Bloc<ChannelEvent, ChannelListState> {
     var properties = Properties();
     //await TwilioProgrammableChat.debug(dart: true, native: true, sdk: false);
     var token = await _userRepo.getToken();
+    identity = await _userRepo.getId();
     developer.log("token $token", name: TAG);
-    chatClient = await TwilioProgrammableChat.create(token, properties);
+    chatClient = TwilioProgrammableChat.chatClient ?? await TwilioProgrammableChat.create(token, properties);
 
     _subscriptions.add(chatClient.onChannelAdded.listen((event) {
       retrieve();
@@ -104,10 +107,14 @@ class ChannelListBloc extends Bloc<ChannelEvent, ChannelListState> {
     var userChannelPaginator = await chatClient.channels.getUserChannelsList();
     var publicChannelPaginator =
         await chatClient.channels.getPublicChannelsList();
-    _currentChatModel = ChannelModel(
-        publicChannels: publicChannelPaginator.items,
-        userChannels: userChannelPaginator.items);
-    add(ChannelsLoaded());
+    developer.log("retrieve ${userChannelPaginator.pageSize}   ${publicChannelPaginator.pageSize}");
+    _currentChannelModel = null;
+    _currentChannelModel = ChannelModel(
+         publicChannelPaginator.items,
+        userChannelPaginator.items);
+    _currentChannelModel.toString();
+    developer.log("retrieve ${_currentChannelModel.toString()}");
+    add(ChannelsLoadedEvent());
   }
 
   Future _updateMessageCountForChannel(

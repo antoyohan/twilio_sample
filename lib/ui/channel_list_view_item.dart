@@ -4,6 +4,8 @@ import 'package:twilio_programmable_chat/twilio_programmable_chat.dart';
 import 'package:twilio_sample/screens/channel_list/channel_list_bloc.dart';
 import 'dart:developer' as developer;
 
+import 'package:twilio_sample/screens/chat/chat_page.dart';
+
 const String TAG = "channelListViewItem";
 class ChannelListViewWidget extends StatefulWidget {
   ChannelListViewWidget({Key key, @required this.channelDescriptor})
@@ -31,8 +33,12 @@ class _ChannelListViewWidgetState extends State<ChannelListViewWidget> {
         var channel = await widget.channelDescriptor.getChannel();
         if (channel.status != ChannelStatus.JOINED) {
           await _channelListBloc.joinChannel(channel);
-
         }
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ChatPage(userName: _channelListBloc.identity , channelDescriptor: widget.channelDescriptor, chatClient: _channelListBloc.chatClient,),
+            ));
       },
       child: Card(
         clipBehavior: Clip.antiAliasWithSaveLayer,
