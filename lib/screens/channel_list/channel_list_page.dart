@@ -3,7 +3,7 @@ import 'dart:developer' as developer;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:twilio_programmable_chat/twilio_programmable_chat.dart';
-import 'package:twilio_sample/models/chat_model.dart';
+import 'package:twilio_sample/models/channel_model.dart';
 import 'package:twilio_sample/repository/user_repository.dart';
 import 'package:twilio_sample/screens/channel_list/channel_list_bloc.dart';
 import 'package:twilio_sample/screens/channel_list/channel_list_state.dart';
@@ -164,7 +164,7 @@ class _ChannelListPageState extends State<ChannelListPage> {
     );
   }
 
-  Widget getListView(ChatModel chatModel) {
+  Widget getListView(ChannelModel chatModel) {
     var count = chatModel.publicChannels.length + chatModel.userChannels.length;
     return ListView.builder(
         scrollDirection: Axis.vertical,
@@ -175,7 +175,7 @@ class _ChannelListPageState extends State<ChannelListPage> {
         itemCount: count);
   }
 
-  Widget getItemWidget(ChatModel chatModel, int index) {
+  Widget getItemWidget(ChannelModel chatModel, int index) {
     ChannelDescriptor channelDescriptor;
     if (index < chatModel.publicChannels.length) {
       channelDescriptor = chatModel.publicChannels[index];

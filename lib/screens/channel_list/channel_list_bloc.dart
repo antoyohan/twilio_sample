@@ -3,7 +3,7 @@ import 'dart:developer' as developer;
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:twilio_programmable_chat/twilio_programmable_chat.dart';
-import 'package:twilio_sample/models/chat_model.dart';
+import 'package:twilio_sample/models/channel_model.dart';
 import 'package:twilio_sample/repository/user_repository.dart';
 import 'package:twilio_sample/screens/channel_list/channel_list_event.dart';
 import 'package:twilio_sample/screens/channel_list/channel_list_state.dart';
@@ -16,7 +16,7 @@ class ChannelListBloc extends Bloc<ChannelEvent, ChannelListState> {
 
   ChatClient chatClient;
   UserRepoImpl _userRepo;
-  ChatModel _currentChatModel;
+  ChannelModel _currentChatModel;
   Map<String, int> unreadMessagesMap = {};
   Map<String, ChannelStatus> channelStatusMap = {};
   final List<StreamSubscription> _subscriptions = <StreamSubscription>[];
@@ -104,7 +104,7 @@ class ChannelListBloc extends Bloc<ChannelEvent, ChannelListState> {
     var userChannelPaginator = await chatClient.channels.getUserChannelsList();
     var publicChannelPaginator =
         await chatClient.channels.getPublicChannelsList();
-    _currentChatModel = ChatModel(
+    _currentChatModel = ChannelModel(
         publicChannels: publicChannelPaginator.items,
         userChannels: userChannelPaginator.items);
     add(ChannelsLoaded());

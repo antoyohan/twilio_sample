@@ -18,7 +18,7 @@ class _ChannelListViewWidgetState extends State<ChannelListViewWidget> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   ChannelListBloc  _channelListBloc;
 
-  @overridex
+  @override
   void initState() {
     _channelListBloc = BlocProvider.of<ChannelListBloc>(context);
     developer.log("initState $_channelListBloc", name: TAG);
