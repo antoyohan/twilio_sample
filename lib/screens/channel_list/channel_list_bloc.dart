@@ -40,7 +40,8 @@ class ChannelListBloc extends Bloc<ChannelEvent, ChannelListState> {
     var token = await _userRepo.getToken();
     identity = await _userRepo.getId();
     developer.log("token $token", name: TAG);
-    chatClient = TwilioProgrammableChat.chatClient ?? await TwilioProgrammableChat.create(token, properties);
+    chatClient = TwilioProgrammableChat.chatClient ??
+        await TwilioProgrammableChat.create(token, properties);
 
     _subscriptions.add(chatClient.onChannelAdded.listen((event) {
       retrieve();
@@ -102,18 +103,23 @@ class ChannelListBloc extends Bloc<ChannelEvent, ChannelListState> {
     }
   }
 
+  /// For paginator and figure out way to split public channels and user channels
   Future retrieve() async {
     developer.log("retreive ", name: TAG);
     var userChannelPaginator = await chatClient.channels.getUserChannelsList();
     var publicChannelPaginator =
         await chatClient.channels.getPublicChannelsList();
-    developer.log("retrieve ${userChannelPaginator.pageSize}   ${publicChannelPaginator.pageSize}");
+
     _currentChannelModel = null;
-    _currentChannelModel = ChannelModel(
-         publicChannelPaginator.items,
-        userChannelPaginator.items);
+    _currentChannelModel =
+        ChannelModel(
+        [], userChannelPaginator.items);
     _currentChannelModel.toString();
     developer.log("retrieve ${_currentChannelModel.toString()}");
+    for (var channelDescriptor in userChannelPaginator.items) {
+      var channel = await channelDescriptor.getChannel();
+      channelStatusMap[channel.sid] = channel.status;
+    }
     add(ChannelsLoadedEvent());
   }
 
