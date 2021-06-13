@@ -113,7 +113,7 @@ class ChannelListBloc extends Bloc<ChannelEvent, ChannelListState> {
     _currentChannelModel = null;
     _currentChannelModel =
         ChannelModel(
-        [], userChannelPaginator.items);
+        publicChannelPaginator.items, userChannelPaginator.items);
     _currentChannelModel.toString();
     developer.log("retrieve ${_currentChannelModel.toString()}");
     for (var channelDescriptor in userChannelPaginator.items) {

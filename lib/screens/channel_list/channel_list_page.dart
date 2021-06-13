@@ -7,6 +7,7 @@ import 'package:twilio_sample/models/channel_model.dart';
 import 'package:twilio_sample/repository/user_repository.dart';
 import 'package:twilio_sample/screens/channel_list/channel_list_bloc.dart';
 import 'package:twilio_sample/screens/channel_list/channel_list_state.dart';
+import 'package:twilio_sample/ui/add_channel_dialog.dart';
 import 'package:twilio_sample/ui/channel_list_view_item.dart';
 import 'package:twilio_sample/utils/string_contants.dart';
 
@@ -21,7 +22,6 @@ class ChannelListPage extends StatefulWidget {
 
 class _ChannelListPageState extends State<ChannelListPage> {
   TextEditingController textController;
-  final scaffoldKey = GlobalKey<ScaffoldState>();
   ChannelListBloc _channelListBloc;
 
   @override
@@ -38,7 +38,7 @@ class _ChannelListPageState extends State<ChannelListPage> {
       child: BlocProvider(
         create: (context) => _channelListBloc,
         child: Scaffold(
-          key: scaffoldKey,
+          resizeToAvoidBottomInset: false,
           appBar: AppBar(
             backgroundColor: Color(0xFF5BA2DF),
             automaticallyImplyLeading: true,
@@ -159,6 +159,10 @@ class _ChannelListPageState extends State<ChannelListPage> {
               ],
             ),
           ),
+          floatingActionButton: FloatingActionButton(
+            child: Icon(Icons.add),
+            onPressed: _showAddChannelDialog,
+          ),
         ),
       ),
     );
@@ -166,13 +170,15 @@ class _ChannelListPageState extends State<ChannelListPage> {
 
   Widget getListView(ChannelModel chatModel) {
     var count = chatModel.publicChannels.length + chatModel.userChannels.length;
-    return ListView.builder(
-        scrollDirection: Axis.vertical,
-        shrinkWrap: true,
-        itemBuilder: (context, index) {
-          return getItemWidget(chatModel, index);
-        },
-        itemCount: count);
+    return Expanded(
+      child: ListView.builder(
+          scrollDirection: Axis.vertical,
+          shrinkWrap: true,
+          itemBuilder: (context, index) {
+            return getItemWidget(chatModel, index);
+          },
+          itemCount: count),
+    );
   }
 
   Widget getItemWidget(ChannelModel chatModel, int index) {
@@ -184,6 +190,17 @@ class _ChannelListPageState extends State<ChannelListPage> {
           chatModel.userChannels[index - chatModel.publicChannels.length];
     }
     return ChannelListViewWidget(channelDescriptor: channelDescriptor);
+  }
+
+  Future _showAddChannelDialog() async {
+    var result = await showDialog<Map<String, dynamic>>(
+        context: context,
+        builder: (context) {
+          return AddChannelDialog();
+        });
+    if (result != null && result['name'] != null && result['name'].isNotEmpty) {
+      await _channelListBloc.addChannel(result['name'], result['type']);
+    }
   }
 
   @override

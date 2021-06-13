@@ -24,7 +24,6 @@ class ChatPage extends StatefulWidget {
 }
 
 class _ChatPageState extends State<ChatPage> {
-  final scaffoldKey = GlobalKey<ScaffoldState>();
   ChatBloc chatBloc;
 
   @override
@@ -42,7 +41,6 @@ class _ChatPageState extends State<ChatPage> {
       child: BlocProvider<ChatBloc>(
         create: (context) => chatBloc,
         child: Scaffold(
-          key: scaffoldKey,
           appBar: AppBar(
             backgroundColor: Color(0xFF5BA2DF),
             automaticallyImplyLeading: true,
@@ -75,29 +73,27 @@ class _ChatPageState extends State<ChatPage> {
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              Expanded(
-                child: StreamBuilder<ChatModel>(
-                    stream: chatBloc.messageStream,
-                    initialData: ChatModel(),
-                    builder: (context, snapshot) {
-                      var chatModel = snapshot.data;
-                      if (chatModel != null && chatModel.messages.isNotEmpty) {
-                        return chatList(chatModel);
-                      } else if (false) {
-                        return Expanded(
-                            child: Center(
-                                child: Text(
-                          Strings.NO_MESSAGES_IN_THE_CHANNEL,
-                          style: TextStyle(color: Colors.red, fontSize: 14.0),
-                        )));
-                      } else {
-                        return Expanded(
-                            child: Center(
-                          child: CircularProgressIndicator(),
-                        ));
-                      }
-                    }),
-              ),
+              StreamBuilder<ChatModel>(
+                  stream: chatBloc.messageStream,
+                  initialData: null,
+                  builder: (context, snapshot) {
+                    var chatModel = snapshot.data;
+                    if (chatModel != null && chatModel.messages.isNotEmpty) {
+                      return chatList(chatModel);
+                    } else if (chatModel != null && chatModel.messages.isEmpty) {
+                      return Expanded(
+                          child: Center(
+                              child: Text(
+                        Strings.NO_MESSAGES_IN_THE_CHANNEL,
+                        style: TextStyle(color: Colors.red, fontSize: 14.0),
+                      )));
+                    } else {
+                      return Expanded(
+                          child: Center(
+                        child: CircularProgressIndicator(),
+                      ));
+                    }
+                  }),
               StreamBuilder<Object>(
                   stream: chatBloc.typingStream,
                   builder: (context, snapshot) {

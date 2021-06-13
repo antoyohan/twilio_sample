@@ -17,7 +17,6 @@ class ChannelListViewWidget extends StatefulWidget {
 }
 
 class _ChannelListViewWidgetState extends State<ChannelListViewWidget> {
-  final scaffoldKey = GlobalKey<ScaffoldState>();
   ChannelListBloc  _channelListBloc;
 
   @override
