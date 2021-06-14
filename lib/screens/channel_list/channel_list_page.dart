@@ -216,9 +216,7 @@ class _ChannelListPageState extends State<ChannelListPage> {
         builder: (context) {
           return ProfileDialog(myUser);
         });
-    if (result != null && result['name'] != null && result['name'].isNotEmpty) {
-      await _channelListBloc.addChannel(result['name'], result['type']);
-    }
+
   }
 
   @override
