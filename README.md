@@ -1,18 +1,26 @@
 # twilio_sample
 
-A new Flutter project for testing twilio
+This is a POC for testing Twilio Programmable chat's Flutter plugin.
+[Twilio Programmable chat sdk (Flutter)](https://pub.dev/packages/twilio_programmable_chat)
+
+### POC Overview
+
+twilio_programmable_chat: 0.1.1+8 
+Flutter: 2.0.2
+IDE: Android Studio 4.2.1
 
 ## Getting Started
 
--[Twilio Programmable chat sdk (Flutter)](https://pub.dev/packages/twilio_programmable_chat)
+# For local development
+Since complete docs are not available refer Android tutorial here for reference.
+[Tutorial here](https://www.twilio.com/docs/chat/tutorials/chat-application-android-java)
 
-This project is a starting point for a Flutter application.
+Twilio programmable chat client requires a access token generated using your twilio credentials.First we need to setup a server that will generate this token for the mobile application to use. We have created web versions of Twilio Chat, you can use any of the following flavours
 
-A few resources to get you started if this is your first Flutter project:
+-[JS - Node](https://github.com/TwilioDevEd/twiliochat-node)
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+For more server flavours have a read on [this](https://github.com/TwilioDevEd/twiliochat-android) project
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Once your server is up and running. You have to change your TOKEN_URL in strings_constants.dart file in the project to your local server path.
+
+Checkout twilio prohrammable chat tutorials [here](https://www.twilio.com/docs/chat).
