@@ -120,6 +120,10 @@ class ChannelListBloc extends Bloc<ChannelEvent, ChannelListState> {
       var channel = await channelDescriptor.getChannel();
       channelStatusMap[channel.sid] = channel.status;
     }
+    for (var channelDescriptor in publicChannelPaginator.items) {
+      var channel = await channelDescriptor.getChannel();
+      channelStatusMap[channel.sid] = channel.status;
+    }
     add(ChannelsLoadedEvent());
   }
 

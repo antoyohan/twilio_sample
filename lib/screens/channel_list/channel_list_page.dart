@@ -150,7 +150,8 @@ class _ChannelListPageState extends State<ChannelListPage> {
                         child: CircularProgressIndicator(),
                       ));
                     } else if (state is ChannelsModel) {
-                      return getListView(state.chatModel);
+                      var channels = getChannels(state);
+                      return getListView(channels);
                     } else {
                       return Expanded(
                           child: Center(
@@ -174,27 +175,27 @@ class _ChannelListPageState extends State<ChannelListPage> {
     );
   }
 
-  Widget getListView(ChannelModel chatModel) {
-    var count = chatModel.publicChannels.length + chatModel.userChannels.length;
+  List<ChannelDescriptor> getChannels(ChannelsModel state) {
+    var channelModel = state.channelModel;
+    var publicChannels = channelModel.publicChannels.where((publicChannel) => !channelModel.userChannels.any((userChannel) => userChannel.sid == publicChannel.sid)).toList();
+    var channels = [...channelModel.userChannels, ...publicChannels];
+    return channels;
+  }
+
+  Widget getListView(List<ChannelDescriptor> channels) {
+    var count = channels.length;
     return Expanded(
       child: ListView.builder(
           scrollDirection: Axis.vertical,
           shrinkWrap: true,
           itemBuilder: (context, index) {
-            return getItemWidget(chatModel, index);
+            return getItemWidget(channels[index]);
           },
           itemCount: count),
     );
   }
 
-  Widget getItemWidget(ChannelModel chatModel, int index) {
-    ChannelDescriptor channelDescriptor;
-    if (index < chatModel.publicChannels.length) {
-      channelDescriptor = chatModel.publicChannels[index];
-    } else {
-      channelDescriptor =
-          chatModel.userChannels[index - chatModel.publicChannels.length];
-    }
+  Widget getItemWidget(ChannelDescriptor channelDescriptor) {
     return ChannelListViewWidget(channelDescriptor: channelDescriptor);
   }
 

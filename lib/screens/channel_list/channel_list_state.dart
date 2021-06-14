@@ -5,7 +5,7 @@ abstract class ChannelListState{}
 class ChannelLoading extends ChannelListState{}
 
 class ChannelsModel extends ChannelListState {
-  ChannelModel chatModel;
+  ChannelModel channelModel;
 
-  ChannelsModel(this.chatModel);
+  ChannelsModel(this.channelModel);
 }
