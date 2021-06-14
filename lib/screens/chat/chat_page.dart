@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:twilio_programmable_chat/twilio_programmable_chat.dart';
 import 'package:twilio_sample/models/chat_model.dart';
+import 'package:twilio_sample/models/media_model.dart';
 import 'package:twilio_sample/screens/chat/chat_bloc.dart';
 import 'package:twilio_sample/screens/chat/chat_page_states.dart';
 import 'package:twilio_sample/ui/chat_cards.dart';
@@ -121,11 +122,14 @@ class _ChatPageState extends State<ChatPage> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     IconButton(
+
                         icon: Icon(
                           Icons.add_circle_outline_rounded,
                           color: Colors.cyan,
                         ),
-                        onPressed: () {}),
+                        onPressed: () {
+                          chatBloc.sendImage();
+                        }),
                     Expanded(
                       child: TextFormField(
                         controller: chatBloc.messageController,
@@ -199,27 +203,54 @@ class _ChatPageState extends State<ChatPage> {
   Widget getChatCard(Message message) {
     if (messageFromMe(message.author)) {
       if (message.hasMedia) {
-        return Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Container(
-            child: Text("Media message"),
-          ),
-        );
+        return getImageWidget(message, true);
       } else {
         return ChatListItemWidget(message: message);
       }
     } else {
       if (message.hasMedia) {
-        return Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Container(
-            child: Text("Media message"),
-          ),
-        );
+        return getImageWidget(message, true);
       } else {
         return AgentChatListItemWidget(message: message);
       }
     }
+  }
+
+  StreamBuilder<MediaModel> getImageWidget(Message message, bool isMe) {
+    return StreamBuilder(
+      stream: chatBloc.mediaSubjects[message.sid],
+      initialData: MediaModel(isLoading: true, message: message),
+      builder: (BuildContext context, AsyncSnapshot<MediaModel> snapshot) {
+        var data = snapshot.data;
+        // Set height/width on Containers to avoid jank
+        if (data.isLoading) {
+          return Container(
+            height: 220,
+            width: 220,
+            child: Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
+        } else {
+          print('ChannelPage => building message sid: ${message.sid} index: ${message.messageIndex} file: ${data.file.path}');
+          return Row(
+            mainAxisAlignment: isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Container(
+                height: 220,
+                width: 220,
+                child: Image.file(
+                  data.file,
+                  height: 200,
+                  width: 200,
+                ),
+              ),
+            ],
+          );
+        }
+      },
+    );
   }
 
   bool messageFromMe(String author) {

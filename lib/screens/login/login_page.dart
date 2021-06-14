@@ -93,7 +93,7 @@ class _LoginPageState extends State<LoginPage> {
                   listener: (context, state) {
                     if (state is LoginSuccess) {
                       developer.log("login success", name: TAG);
-                      Navigator.push(
+                      Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
                             builder: (context) => ChannelListPage()),
