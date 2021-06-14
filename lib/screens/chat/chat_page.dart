@@ -5,7 +5,6 @@ import 'package:twilio_sample/models/chat_model.dart';
 import 'package:twilio_sample/screens/chat/chat_bloc.dart';
 import 'package:twilio_sample/screens/chat/chat_page_states.dart';
 import 'package:twilio_sample/ui/chat_cards.dart';
-import 'package:twilio_sample/utils/string_contants.dart';
 
 class ChatPage extends StatefulWidget {
   ChatPage(
@@ -80,11 +79,12 @@ class _ChatPageState extends State<ChatPage> {
                     var chatModel = snapshot.data;
                     if (chatModel != null && chatModel.messages.isNotEmpty) {
                       return chatList(chatModel);
-                    } else if (chatModel != null && chatModel.messages.isEmpty) {
+                    } else if (chatModel != null &&
+                        chatModel.messages.isEmpty) {
                       return Expanded(
                           child: Center(
                               child: Text(
-                        Strings.NO_MESSAGES_IN_THE_CHANNEL,
+                        "",
                         style: TextStyle(color: Colors.red, fontSize: 14.0),
                       )));
                     } else {
@@ -98,7 +98,7 @@ class _ChatPageState extends State<ChatPage> {
                   stream: chatBloc.typingStream,
                   builder: (context, snapshot) {
                     var data = snapshot.data;
-                    if (data != null && !messageFromMe(data))  {
+                    if (data != null && !messageFromMe(data)) {
                       return Row(
                           mainAxisSize: MainAxisSize.max,
                           mainAxisAlignment: MainAxisAlignment.start,

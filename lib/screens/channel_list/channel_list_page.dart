@@ -8,6 +8,7 @@ import 'package:twilio_sample/repository/user_repository.dart';
 import 'package:twilio_sample/screens/channel_list/channel_list_bloc.dart';
 import 'package:twilio_sample/screens/channel_list/channel_list_state.dart';
 import 'package:twilio_sample/ui/add_channel_dialog.dart';
+import 'package:twilio_sample/ui/profile_dialog.dart';
 import 'package:twilio_sample/ui/channel_list_view_item.dart';
 import 'package:twilio_sample/utils/string_contants.dart';
 
@@ -59,15 +60,20 @@ class _ChannelListPageState extends State<ChannelListPage> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Container(
-                      width: 70,
-                      height: 70,
-                      clipBehavior: Clip.antiAlias,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                      ),
-                      child: Image.network(
-                        'https://picsum.photos/seed/423/600',
+                    GestureDetector(
+                      onTap: () {
+                        _showProfileDialog(_channelListBloc.chatClient.users.myUser);
+                      },
+                      child: Container(
+                        width: 70,
+                        height: 70,
+                        clipBehavior: Clip.antiAlias,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                        ),
+                        child: Image.network(
+                          'https://picsum.photos/seed/423/600',
+                        ),
                       ),
                     )
                   ],
@@ -197,6 +203,17 @@ class _ChannelListPageState extends State<ChannelListPage> {
         context: context,
         builder: (context) {
           return AddChannelDialog();
+        });
+    if (result != null && result['name'] != null && result['name'].isNotEmpty) {
+      await _channelListBloc.addChannel(result['name'], result['type']);
+    }
+  }
+
+  Future _showProfileDialog(User myUser) async {
+    var result = await showDialog<Map<String, dynamic>>(
+        context: context,
+        builder: (context) {
+          return ProfileDialog(myUser);
         });
     if (result != null && result['name'] != null && result['name'].isNotEmpty) {
       await _channelListBloc.addChannel(result['name'], result['type']);
