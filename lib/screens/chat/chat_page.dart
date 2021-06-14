@@ -235,7 +235,6 @@ class _ChatPageState extends State<ChatPage> {
       initialData: MediaModel(isLoading: true, message: message),
       builder: (BuildContext context, AsyncSnapshot<MediaModel> snapshot) {
         var data = snapshot.data;
-        // Set height/width on Containers to avoid jank
         if (data.isLoading) {
           return Container(
             height: 220,
