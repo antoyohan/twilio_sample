@@ -5,13 +5,13 @@ This is a POC for testing Twilio Programmable chat's Flutter plugin.
 
 ### POC Overview
 
-twilio_programmable_chat: 0.1.1+8 
-Flutter: 2.0.2
+twilio_programmable_chat: 0.1.1+8,
+Flutter: 2.0.2,
 IDE: Android Studio 4.2.1
 
 ## Getting Started
 
-# For local development
+## For local development
 Since complete docs are not available refer Android tutorial here for reference.
 [Tutorial here](https://www.twilio.com/docs/chat/tutorials/chat-application-android-java)
 
