@@ -4,7 +4,8 @@ A new Flutter project for testing twilio
 
 ## Getting Started
 
--[Twilio Programmable chat sdk (Flutter)] (https://pub.dev/packages/twilio_programmable_chat)
+-[Twilio Programmable chat sdk (Flutter)](https://pub.dev/packages/twilio_programmable_chat)
+
 This project is a starting point for a Flutter application.
 
 A few resources to get you started if this is your first Flutter project:
