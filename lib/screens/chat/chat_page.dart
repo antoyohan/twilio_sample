@@ -6,6 +6,7 @@ import 'package:twilio_sample/models/media_model.dart';
 import 'package:twilio_sample/screens/chat/chat_bloc.dart';
 import 'package:twilio_sample/screens/chat/chat_page_states.dart';
 import 'package:twilio_sample/ui/chat_cards.dart';
+import 'package:twilio_sample/ui/members_list_dialog.dart';
 
 class ChatPage extends StatefulWidget {
   ChatPage(
@@ -57,12 +58,17 @@ class _ChatPageState extends State<ChatPage> {
               ],
             ),
             actions: [
-              Padding(
-                padding: EdgeInsets.fromLTRB(0, 0, 15, 0),
-                child: Icon(
-                  Icons.more_vert_sharp,
-                  color: Colors.white,
-                  size: 24,
+              GestureDetector(
+                onTap: () {
+                  _showMembersLIstDialog(widget.channelDescriptor);
+                },
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(0, 0, 15, 0),
+                  child: Icon(
+                    Icons.more_vert_sharp,
+                    color: Colors.white,
+                    size: 24,
+                  ),
                 ),
               )
             ],
@@ -187,6 +193,13 @@ class _ChatPageState extends State<ChatPage> {
 
   ///Return list view
   Widget chatList(ChatModel chatModel) {
+    /*if (chatBloc.scrollController.hasClients) {
+      chatBloc.scrollController.animateTo(
+        chatBloc.scrollController.position.maxScrollExtent,
+        duration: Duration(seconds: 1),
+        curve: Curves.fastOutSlowIn,
+      );
+    }*/
     return Expanded(
       child: ListView.builder(
         itemBuilder: (context, index) {
@@ -255,5 +268,13 @@ class _ChatPageState extends State<ChatPage> {
 
   bool messageFromMe(String author) {
     return author == chatBloc.chatClient.myIdentity;
+  }
+
+  Future _showMembersLIstDialog(ChannelDescriptor channelDescriptor) async {
+   var result = await showDialog(
+        context: context,
+        builder: (context) {
+          return MembersListDialog(channelDescriptor);
+        });
   }
 }
