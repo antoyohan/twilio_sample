@@ -89,57 +89,6 @@ class _ChannelListPageState extends State<ChannelListPage> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 10.0, 0, 10.0),
-                  child: TextFormField(
-                    onChanged: (_) => setState(() {}),
-                    controller: textController,
-                    obscureText: false,
-                    decoration: InputDecoration(
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Color(0xFF9F9F9F),
-                          width: 1,
-                        ),
-                        borderRadius: const BorderRadius.only(
-                          topLeft: Radius.circular(4.0),
-                          topRight: Radius.circular(4.0),
-                        ),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Color(0xFF9F9F9F),
-                          width: 1,
-                        ),
-                        borderRadius: const BorderRadius.only(
-                          topLeft: Radius.circular(4.0),
-                          topRight: Radius.circular(4.0),
-                        ),
-                      ),
-                      contentPadding: EdgeInsets.fromLTRB(5, 0, 5, 0),
-                      prefixIcon: Icon(
-                        Icons.search,
-                      ),
-                      suffixIcon: textController.text.isNotEmpty
-                          ? InkWell(
-                              onTap: () => setState(
-                                () => textController.clear(),
-                              ),
-                              child: Icon(
-                                Icons.clear,
-                                color: Color(0xFF757575),
-                                size: 22,
-                              ),
-                            )
-                          : null,
-                    ),
-                    style: TextStyle(
-                      fontFamily: 'Roboto',
-                      color: Color(0xFF5E5E5E),
-                    ),
-                    textAlign: TextAlign.start,
-                  ),
-                ),
                 BlocBuilder(
                   bloc: _channelListBloc,
                   builder: (context, state) {
