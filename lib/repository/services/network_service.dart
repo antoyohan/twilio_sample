@@ -15,17 +15,19 @@ const TAG = "network_service";
 class NetworkServiceImpl extends NetworkService {
   @override
   Future<Response> getToken(TokenRequest request) async {
-    developer.log("getToken", name: TAG);
+
     Map<String, String> queryParameters = HashMap();
     queryParameters.putIfAbsent("identity", () => request.name);
     queryParameters.putIfAbsent("password", () => 'password');
     var uri = Uri.http(Strings.TOKEN_URL, Strings.PATH, queryParameters);
+    developer.log("get Token uri ${uri.toString()}", name: TAG);
     var response = await http.get(uri);
     if (response.statusCode == 200) {
       developer.log("response ${response.body}", name: TAG);
       return Success<TokenResponse>(response.statusCode,
           TokenResponse.fromMap(jsonDecode(response.body)));
     } else {
+      developer.log("error ${response.statusCode}", name: TAG);
       return Error(response.statusCode, "Failed");
     }
 

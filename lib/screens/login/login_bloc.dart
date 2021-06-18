@@ -22,6 +22,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       initialiseLogin(event);
     } else if (event is LoginComplete) {
       yield LoginSuccess();
+    } else if (event is LoginFailed) {
+      yield LoginFailure();
     }
   }
 
@@ -31,6 +33,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       developer.log("login status $status", name: TAG);
       if (status == AuthenticationStatus.authenticated) {
         add(LoginComplete());
+      } else {
+        add(LoginFailed());
       }
     });
     authRepo.login(name: event.userName, password: '');

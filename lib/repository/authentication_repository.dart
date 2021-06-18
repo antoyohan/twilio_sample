@@ -6,6 +6,7 @@ import 'package:twilio_sample/models/token_request.dart';
 import 'package:twilio_sample/models/token_response.dart';
 import 'package:twilio_sample/repository/services/network_interface.dart';
 import 'package:twilio_sample/repository/user_repository.dart';
+import 'dart:developer' as developer;
 
 enum AuthenticationStatus { unknown, authenticated, unauthenticated }
 
@@ -33,10 +34,8 @@ class AuthenticationRepoImpl implements AuthenticationRepo {
 
   @override
   Future<void> login({String name, String password}) async {
-    _controller.add(AuthenticationStatus.unauthenticated);
     Response response =
         await _networkService.getToken(TokenRequest(name: name, password: ""));
-
     if (response.statusCode == 200) {
       await saveUserInfo(response);
       _controller.add(AuthenticationStatus.authenticated);

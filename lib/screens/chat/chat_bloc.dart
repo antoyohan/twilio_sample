@@ -83,18 +83,18 @@ class ChatBloc extends Bloc<ChatPageEvent, ChatPageState> {
     });
   }
 
-  Future _getMessages(Channel channelEvent) async {
+  Future _getMessages(Channel channel) async {
     developer.log("getMessages", name: TAG);
-    var friendlyName = await channelEvent.getFriendlyName();
-    var messageCount = await channelEvent.getMessagesCount();
-    var messages = await channelEvent.messages.getLastMessages(messageCount);
+    var friendlyName = await channel.getFriendlyName();
+    var messageCount = await channel.getMessagesCount();
+    var messages = await channel.messages.getLastMessages(messageCount);
     developer.log("getMessages $friendlyName  $messageCount ${messages.length}", name: TAG);
     messages.where((message) => message.hasMedia).forEach(_getImage);
     _messageSubject.add(_messageSubject.value.copyWith(
       friendlyName: friendlyName,
       messages: messages,
     ));
-    await _updateLastConsumedMessageIndex(channelEvent, messages);
+    await _updateLastConsumedMessageIndex(channel, messages);
   }
 
   Future _updateLastConsumedMessageIndex(

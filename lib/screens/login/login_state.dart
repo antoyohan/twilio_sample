@@ -9,7 +9,7 @@ class LoginSuccess extends LoginState {}
 class LoginFailure extends LoginState {
   final Error error;
 
-  LoginFailure(this.error);
+  LoginFailure({this.error});
 }
 
 class UnknownState extends LoginState {}

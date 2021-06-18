@@ -84,7 +84,7 @@ class _ChannelListViewWidgetState extends State<ChannelListViewWidget> {
                   ),
                 ),
                 Text(
-                  'Hello World',
+                  '',
                   style: TextStyle(
                     fontFamily: 'Roboto',
                     color: Color(0xFF9F9F9F),
