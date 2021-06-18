@@ -37,7 +37,7 @@ class AuthenticationRepoImpl implements AuthenticationRepo {
     Response response =
         await _networkService.getToken(TokenRequest(name: name, password: ""));
 
-    if (response.statusCode == 201) {
+    if (response.statusCode == 200) {
       await saveUserInfo(response);
       _controller.add(AuthenticationStatus.authenticated);
     } else {

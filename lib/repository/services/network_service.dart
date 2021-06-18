@@ -1,3 +1,4 @@
+import 'dart:collection';
 import 'dart:convert';
 import 'dart:developer' as developer;
 
@@ -15,15 +16,20 @@ class NetworkServiceImpl extends NetworkService {
   @override
   Future<Response> getToken(TokenRequest request) async {
     developer.log("getToken", name: TAG);
-    var response = await http.get(Uri.parse(Strings.TOKEN_URL));
-    if (response.statusCode == 201) {
-      printResponse(response as Response);
+    Map<String, String> queryParameters = HashMap();
+    queryParameters.putIfAbsent("identity", () => request.name);
+    queryParameters.putIfAbsent("password", () => 'password');
+    var uri = Uri.http(Strings.TOKEN_URL, Strings.PATH, queryParameters);
+    var response = await http.get(uri);
+    if (response.statusCode == 200) {
+      developer.log("response ${response.body}", name: TAG);
       return Success<TokenResponse>(response.statusCode,
           TokenResponse.fromMap(jsonDecode(response.body)));
     } else {
       return Error(response.statusCode, "Failed");
     }
-    /*TokenResponse response = TokenResponse(request.name, "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImN0eSI6InR3aWxpby1mcGE7dj0xIn0.eyJqdGkiOiJTSzBlNjNmOGE3NTU3YzQxMmJiODQ1NTIzMGMwMzY0ZDM5LTE2MjM2OTA4NTIiLCJncmFudHMiOnsiaWRlbnRpdHkiOiJkc2QiLCJjaGF0Ijp7InNlcnZpY2Vfc2lkIjoiSVNhNTJiZmM0OTljZDY0MmYwYWU4OTRhNTM3ZTQ5Yjc2OCJ9fSwiaWF0IjoxNjIzNjkwODUyLCJleHAiOjE2MjM2OTQ0NTIsImlzcyI6IlNLMGU2M2Y4YTc1NTdjNDEyYmI4NDU1MjMwYzAzNjRkMzkiLCJzdWIiOiJBQzMzOTNjZjAzODNlMTQ3YTUzMzg2ZTI4YzUwYmFiNTU0In0.0ITTXQrIaWleU6WxoJUFY2w7TvchF8uxEbYFbONyubc", request.name);
-    return Future.value(Success<TokenResponse>(201, response));*/
+
+   /* TokenResponse response = TokenResponse(identity: request.name, token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImN0eSI6InR3aWxpby1mcGE7dj0xIn0.eyJqdGkiOiJTSzBlNjNmOGE3NTU3YzQxMmJiODQ1NTIzMGMwMzY0ZDM5LTE2MjM5OTA5ODIiLCJncmFudHMiOnsiaWRlbnRpdHkiOiJnIiwiY2hhdCI6eyJzZXJ2aWNlX3NpZCI6IklTYTUyYmZjNDk5Y2Q2NDJmMGFlODk0YTUzN2U0OWI3NjgifX0sImlhdCI6MTYyMzk5MDk4MiwiZXhwIjoxNjIzOTk0NTgyLCJpc3MiOiJTSzBlNjNmOGE3NTU3YzQxMmJiODQ1NTIzMGMwMzY0ZDM5Iiwic3ViIjoiQUMzMzkzY2YwMzgzZTE0N2E1MzM4NmUyOGM1MGJhYjU1NCJ9.ZFIEhz2NF-JUD7r7ZXd7mmb-pCR76HYz1FbxWd9aeV0", name: request.name);
+    return Future.value(Success<TokenResponse>(200, response));*/
   }
 }
