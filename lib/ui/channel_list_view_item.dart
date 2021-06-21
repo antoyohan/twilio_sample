@@ -30,14 +30,7 @@ class _ChannelListViewWidgetState extends State<ChannelListViewWidget> {
     return GestureDetector(
       onTap: () async  {
         var channel = await widget.channelDescriptor.getChannel();
-        if (channel.status != ChannelStatus.JOINED) {
-          await _channelListBloc.joinChannel(channel);
-        }
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => ChatPage(userName: _channelListBloc.identity , channelDescriptor: widget.channelDescriptor, chatClient: _channelListBloc.chatClient,),
-            ));
+        await onChannelItemClick(channel, context);
       },
       child: Card(
         clipBehavior: Clip.antiAliasWithSaveLayer,
@@ -46,55 +39,86 @@ class _ChannelListViewWidgetState extends State<ChannelListViewWidget> {
         child: Row(
           mainAxisSize: MainAxisSize.max,
           children: [
-            Padding(
-              padding: EdgeInsets.fromLTRB(10, 5, 20, 5),
-              child: Container(
-                width: 60,
-                height: 60,
-                clipBehavior: Clip.antiAlias,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                ),
-                child: Image.network(
-                  'https://picsum.photos/seed/291/600',
+            Expanded(
+              flex: 2,
+              child: Padding(
+                padding: EdgeInsets.fromLTRB(10, 5, 20, 5),
+                child: Container(
+                  width: 60,
+                  height: 60,
+                  clipBehavior: Clip.antiAlias,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                  ),
+                  child: Image.network(
+                    'https://picsum.photos/seed/291/600',
+                  ),
                 ),
               ),
             ),
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  widget.channelDescriptor.friendlyName,
-                  style: TextStyle(
-                    fontFamily: 'Roboto',
+            Expanded(
+              flex: 5,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    widget.channelDescriptor.friendlyName,
+                    style: TextStyle(
+                      fontFamily: 'Roboto',
+                    ),
                   ),
-                ),
-                Container(
-                  constraints: BoxConstraints( maxWidth: 100),
-                  child: Text(
-                    widget.channelDescriptor.sid,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+                  Container(
+                    constraints: BoxConstraints( maxWidth: 100),
+                    child: Text(
+                      widget.channelDescriptor.sid,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontFamily: 'Roboto',
+                        color: Color(0xFF9F9F9F),
+                      ),
+                    ),
+                  ),
+                  Text(
+                    '',
                     style: TextStyle(
                       fontFamily: 'Roboto',
                       color: Color(0xFF9F9F9F),
                     ),
-                  ),
-                ),
-                Text(
-                  '',
-                  style: TextStyle(
-                    fontFamily: 'Roboto',
-                    color: Color(0xFF9F9F9F),
-                  ),
-                )
-              ],
+                  )
+                ],
+              ),
+            ),
+            Expanded(
+              flex: 1,
+              child: IconButton(
+                icon: Icon(Icons.delete),
+                iconSize: 20,
+                onPressed: () {
+                  _deleteChannel();
+                },
+              ),
             )
           ],
         ),
       ),
     );
+  }
+
+  Future<void> onChannelItemClick(Channel channel, BuildContext context) async {
+    if (channel.status != ChannelStatus.JOINED) {
+      await _channelListBloc.joinChannel(channel);
+    }
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ChatPage(userName: _channelListBloc.identity , channelDescriptor: widget.channelDescriptor, chatClient: _channelListBloc.chatClient,),
+        ));
+  }
+
+  void _deleteChannel() async{
+    await _channelListBloc.destroyChannel(widget.channelDescriptor);
   }
 }

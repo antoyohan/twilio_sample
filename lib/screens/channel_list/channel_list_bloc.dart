@@ -7,10 +7,11 @@ import 'package:twilio_sample/models/channel_model.dart';
 import 'package:twilio_sample/repository/user_repository.dart';
 import 'package:twilio_sample/screens/channel_list/channel_list_event.dart';
 import 'package:twilio_sample/screens/channel_list/channel_list_state.dart';
+import 'package:twilio_sample/utils/channel_manager.dart';
 
 const String TAG = "ChannelListBloc";
 
-class ChannelListBloc extends Bloc<ChannelEvent, ChannelListState> {
+class ChannelListBloc extends Bloc<ChannelEvent, ChannelListState> with ChannelManager {
   String identity;
 
   ChannelListBloc(ChannelListState initialState, this._userRepo)
@@ -62,6 +63,7 @@ class ChannelListBloc extends Bloc<ChannelEvent, ChannelListState> {
     retrieve();
   }
 
+  @override
   Future addChannel(String channelName, ChannelType type) async {
     if (type != null) {
       add(ChannelAddEvent());
@@ -72,6 +74,7 @@ class ChannelListBloc extends Bloc<ChannelEvent, ChannelListState> {
     }
   }
 
+  @override
   Future joinChannel(Channel channel) {
     developer.log("joinChannel : ${channel.getFriendlyName()} ", name: TAG);
     if (channel != null) {
@@ -83,6 +86,7 @@ class ChannelListBloc extends Bloc<ChannelEvent, ChannelListState> {
     }
   }
 
+  @override
   Future updateChannel(ChannelDescriptor channelDescriptor, String name) async {
     var channel = await channelDescriptor.getChannel();
     if (channel != null) {
@@ -91,6 +95,7 @@ class ChannelListBloc extends Bloc<ChannelEvent, ChannelListState> {
     }
   }
 
+  @override
   Future destroyChannel(ChannelDescriptor channelDescriptor) async {
     try {
       var channel = await channelDescriptor.getChannel();
@@ -98,8 +103,8 @@ class ChannelListBloc extends Bloc<ChannelEvent, ChannelListState> {
         await channel.destroy();
         await retrieve();
       }
-    } catch (e) {
-      //todo
+    } catch (exception) {
+      developer.log("Cannot delete Channel ${exception.toString()}", name: TAG);
     }
   }
 

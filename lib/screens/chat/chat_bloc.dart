@@ -13,10 +13,11 @@ import 'package:twilio_sample/models/chat_model.dart';
 import 'package:twilio_sample/models/media_model.dart';
 import 'package:twilio_sample/screens/chat/chat_page_events.dart';
 import 'package:twilio_sample/screens/chat/chat_page_states.dart';
+import 'package:twilio_sample/utils/chat_manager.dart';
 
 const String TAG = "Chat Bloc";
 
-class ChatBloc extends Bloc<ChatPageEvent, ChatPageState> {
+class ChatBloc extends Bloc<ChatPageEvent, ChatPageState> with ChatManager{
   TextEditingController messageController = TextEditingController();
   String myUsername;
   ChatClient chatClient;
@@ -46,7 +47,7 @@ class ChatBloc extends Bloc<ChatPageEvent, ChatPageState> {
       _subscribeToChannel();
     });
     messageController.addListener(() {
-      _onTyping();
+      sendTyping();
     });
     _subscriptions = <StreamSubscription>[];
   }
@@ -62,11 +63,11 @@ class ChatBloc extends Bloc<ChatPageEvent, ChatPageState> {
   Future _subscribeToChannel() async {
     developer.log("subscribeToChannel", name: TAG);
     if (channel.hasSynchronized) {
-      await _getMessages(channel);
+      await getMessages();
     }
     _subscriptions.add(channel.onSynchronizationChanged.listen((event) async {
       if (event.synchronizationStatus == ChannelSynchronizationStatus.ALL) {
-        await _getMessages(event);
+        await getMessages();
       }
     }));
     _subscriptions.add(channel.onMessageAdded.listen((Message message) {
@@ -83,7 +84,8 @@ class ChatBloc extends Bloc<ChatPageEvent, ChatPageState> {
     });
   }
 
-  Future _getMessages(Channel channel) async {
+  @override
+  Future getMessages() async {
     developer.log("getMessages", name: TAG);
     var friendlyName = await channel.getFriendlyName();
     var messageCount = await channel.getMessagesCount();
@@ -106,6 +108,7 @@ class ChatBloc extends Bloc<ChatPageEvent, ChatPageState> {
         .setLastConsumedMessageIndexWithResult(lastConsumedMessageIndex);
   }
 
+  @override
   Future sendMessage() async {
     developer.log("sendMessage", name: TAG);
     var message = MessageOptions()
@@ -134,6 +137,7 @@ class ChatBloc extends Bloc<ChatPageEvent, ChatPageState> {
     subject.close();
   }
 
+  @override
   Future sendImage() async {
     developer.log("send Image", name: TAG);
     var image = await _imagePicker.getImage(source: ImageSource.gallery);
@@ -147,6 +151,7 @@ class ChatBloc extends Bloc<ChatPageEvent, ChatPageState> {
     }
   }
 
+  @override
   Future leaveChannel() async {
     developer.log("leave Channel", name: TAG);
     if (channel.type == ChannelType.PUBLIC) {
@@ -157,7 +162,8 @@ class ChatBloc extends Bloc<ChatPageEvent, ChatPageState> {
     }
   }
 
-  Future _onTyping() async {
+  @override
+  Future sendTyping() async {
     developer.log("onTyping", name: TAG);
     await channel.typing();
   }
@@ -168,7 +174,7 @@ class ChatBloc extends Bloc<ChatPageEvent, ChatPageState> {
     await _messageSubject.close();
     _subscriptions.forEach((s) => s.cancel());
     _subscriptions.clear();
-    messageController.removeListener(_onTyping);
+    messageController.removeListener(sendTyping);
     return super.close();
   }
 }
